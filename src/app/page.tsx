@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LoginButton from "@/components/LoginButton";
 
 export default function Home() {
   return (
@@ -16,12 +16,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-4 text-base font-medium sm:flex-row pt-4">
-            <Link
-              className="flex h-12 items-center justify-center rounded-full bg-black text-white px-8 transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-              href="/dashboard"
-            >
-              Get Started
-            </Link>
+            <LoginButton />
           </div>
         </div>
       </main>
