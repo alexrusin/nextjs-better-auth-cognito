@@ -17,6 +17,9 @@ export const auth = betterAuth({
         type: "string",
         required: true,
       },
+      role: {
+        type: "string",
+      },
     },
   },
   socialProviders: {
@@ -51,6 +54,7 @@ export const auth = betterAuth({
             name: userInfo.name,
             email: userInfo.email,
             emailVerified: userInfo.email_verified === "true" || false,
+            role: userInfo["custom:role"] || "user",
           },
           data: userInfo,
         };

@@ -1,7 +1,32 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import Navigation from "@/components/Navigation";
+import TasksContent from "@/components/TasksContent";
+import { getTasksAction } from "@/lib/task-actions";
+import { auth } from "@/lib/auth";
+import { ITask } from "@/models/Task";
 
-export default function Tasks() {
+export default async function Tasks() {
+  const headersList = await headers();
+  const session = await auth.api.getSession({
+    headers: headersList,
+  });
+
+  if (!session) {
+    redirect("/");
+  }
+
+  const user = session.user;
+  const userId = user.id;
+
+  let tasks: (ITask & { _id: string })[] = [];
+  try {
+    tasks = (await getTasksAction(user.id)) as (ITask & { _id: string })[];
+  } catch (error) {
+    console.error("Failed to load tasks:", error);
+  }
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <Navigation />
@@ -24,11 +49,7 @@ export default function Tasks() {
             </Link>
           </div>
 
-          <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-8">
-            <p className="text-zinc-600 dark:text-zinc-400 text-center">
-              No tasks yet. Create your first task to get started!
-            </p>
-          </div>
+          <TasksContent initialTasks={tasks} user={user} />
         </div>
       </main>
     </div>

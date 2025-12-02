@@ -1,9 +1,33 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { getTasksAction } from "@/lib/task-actions";
+import { ITask } from "@/models/Task";
 
-export default function Dashboard() {
-  // Mock data - in a real app, this would come from a database
-  const totalTasks = 12;
-  const completedTasks = 8;
+export default async function Dashboard() {
+  // Get session on the server
+  const headersList = await headers();
+  const session = await auth.api.getSession({
+    headers: headersList,
+  });
+
+  if (!session) {
+    redirect("/");
+  }
+
+  const userId = session.user.id;
+
+  // Fetch tasks to calculate stats
+  let tasks: ITask[] = [];
+  try {
+    tasks = await getTasksAction(userId);
+  } catch (error) {
+    console.error("Failed to load tasks:", error);
+  }
+
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed).length;
 
   return (
     <div className="space-y-6">
