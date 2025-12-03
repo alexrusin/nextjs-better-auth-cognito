@@ -76,7 +76,7 @@ export default function TasksContent({
         </h2>
         <TaskList
           tasks={tasks}
-          userId={user.id}
+          user={user}
           onTaskUpdated={handleTaskUpdated}
           onTaskDeleted={handleTaskDeleted}
         />

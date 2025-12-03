@@ -8,4 +8,5 @@ type User = {
   image?: string | null | undefined | undefined;
   sub: string;
   role: string;
+  permissions: string;
 };

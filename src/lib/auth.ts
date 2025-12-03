@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import jwt from "jsonwebtoken";
 
 const client = new MongoClient(process.env.MONGODB_URI!);
 const db = client.db();
@@ -18,6 +19,9 @@ export const auth = betterAuth({
         required: true,
       },
       role: {
+        type: "string",
+      },
+      permissions: {
         type: "string",
       },
     },
@@ -46,6 +50,11 @@ export const auth = betterAuth({
 
         const userInfo = await userInfoResponse.json();
 
+        const decoded = jwt.decode(token.accessToken as string) as Record<
+          string,
+          string | number
+        >;
+
         return {
           user: {
             id: userInfo.sub,
@@ -55,6 +64,7 @@ export const auth = betterAuth({
             email: userInfo.email,
             emailVerified: userInfo.email_verified === "true" || false,
             role: userInfo["custom:role"] || "user",
+            permissions: decoded?.scope || "",
           },
           data: userInfo,
         };

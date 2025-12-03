@@ -11,6 +11,10 @@ import { can } from "./utils";
  */
 export async function getTasksAction(userId: string): Promise<ITask[]> {
   try {
+    const { user } = await verifySession();
+    if (!can(user, "read_tasks")) {
+      throw new Error("You are not authorized to perform this action");
+    }
     await connectToDatabase();
 
     if (!userId) {
@@ -38,9 +42,10 @@ export async function createTaskAction(taskData: {
 }): Promise<ITask> {
   try {
     const { user } = await verifySession();
-    if (!can(user, "create_task")) {
-      throw new Error("Unauthorized");
+    if (!can(user, "create_tasks")) {
+      throw new Error("You are not authorized to perform this action");
     }
+
     await connectToDatabase();
 
     const { name, description, dueDate } = taskData;
@@ -80,6 +85,10 @@ export async function updateTaskAction(
   userId: string,
 ): Promise<ITask> {
   try {
+    const { user } = await verifySession();
+    if (!can(user, "update_tasks")) {
+      throw new Error("You are not authorized to perform this action");
+    }
     await connectToDatabase();
 
     if (!userId) {
@@ -122,6 +131,10 @@ export async function deleteTaskAction(
   userId: string,
 ): Promise<void> {
   try {
+    const { user } = await verifySession();
+    if (!can(user, "delete_tasks")) {
+      throw new Error("You are not authorized to perform this action");
+    }
     await connectToDatabase();
 
     if (!userId) {

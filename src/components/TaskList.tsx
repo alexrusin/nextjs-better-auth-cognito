@@ -7,10 +7,11 @@ import {
   deleteTaskAction,
   toggleTaskCompletionAction,
 } from "@/lib/task-actions";
+import { can } from "@/lib/utils";
 
 interface TaskListProps {
   tasks: (ITask & { _id: string })[];
-  userId: string;
+  user: User;
   onTaskUpdated: (task: ITask) => void;
   onTaskDeleted: (taskId: string) => void;
 }
@@ -23,7 +24,7 @@ interface EditFormData {
 
 export default function TaskList({
   tasks,
-  userId,
+  user,
   onTaskUpdated,
   onTaskDeleted,
 }: TaskListProps) {
@@ -68,7 +69,7 @@ export default function TaskList({
           description: editFormData.description,
           dueDate: editFormData.dueDate,
         },
-        userId,
+        user.id,
       );
       onTaskUpdated(updated);
       setEditingId(null);
@@ -87,7 +88,7 @@ export default function TaskList({
       const updated = await toggleTaskCompletionAction(
         taskId,
         task.completed,
-        userId,
+        user.id,
       );
       onTaskUpdated(updated);
     } catch (error) {
@@ -102,7 +103,7 @@ export default function TaskList({
 
     setIsLoading(taskId);
     try {
-      await deleteTaskAction(taskId, userId);
+      await deleteTaskAction(taskId, user.id);
       onTaskDeleted(taskId);
     } catch (error) {
       console.error("Failed to delete task:", error);
@@ -220,20 +221,24 @@ export default function TaskList({
                   </div>
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
-                  <button
-                    onClick={() => handleEditStart(task)}
-                    disabled={isLoading === taskId}
-                    className="px-3 py-1 text-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(taskId)}
-                    disabled={isLoading === taskId}
-                    className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
+                  {can(user, "update_tasks") && (
+                    <button
+                      onClick={() => handleEditStart(task)}
+                      disabled={isLoading === taskId}
+                      className="px-3 py-1 text-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50"
+                    >
+                      Edit
+                    </button>
+                  )}
+                  {can(user, "delete_tasks") && (
+                    <button
+                      onClick={() => handleDelete(taskId)}
+                      disabled={isLoading === taskId}
+                      className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
             )}

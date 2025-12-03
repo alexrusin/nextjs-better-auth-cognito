@@ -1,6 +1,6 @@
 export function can(user: User, action: string) {
-  if (action === "create_task") {
-    return user.role === "admin";
+  if (!user.permissions.includes(action)) {
+    return false;
   }
   return true;
 }
