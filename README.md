@@ -1,4 +1,4 @@
-# Task Manager with Better Auth & AWS Cognito
+# Next.js Authentication with Better Auth & AWS Cognito
 
 A modern, full-stack task management application built with Next.js, Better Auth, and AWS Cognito for secure authentication. This project demonstrates enterprise-grade authentication patterns with role-based access control (RBAC) and MongoDB integration.
 
