@@ -85,9 +85,16 @@ export default function Navigation() {
             {/* Dropdown menu */}
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 z-50">
+                <Link
+                  href="/settings"
+                  onClick={() => setIsDropdownOpen(false)}
+                  className="block w-full text-left px-4 py-3 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors first:rounded-t-lg"
+                >
+                  Settings
+                </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-3 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors first:rounded-t-lg last:rounded-b-lg"
+                  className="w-full text-left px-4 py-3 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors last:rounded-b-lg"
                 >
                   Logout
                 </button>

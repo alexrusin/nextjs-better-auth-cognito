@@ -24,6 +24,9 @@ export const auth = betterAuth({
       permissions: {
         type: "string",
       },
+      identities: {
+        type: "string",
+      },
     },
   },
   socialProviders: {
@@ -65,6 +68,7 @@ export const auth = betterAuth({
             emailVerified: userInfo.email_verified === "true" || false,
             role: userInfo["custom:role"] || "user",
             permissions: decoded?.scope || "",
+            identities: userInfo.identities || "",
           },
           data: userInfo,
         };

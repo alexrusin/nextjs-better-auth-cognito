@@ -9,4 +9,5 @@ type User = {
   sub: string;
   role: string;
   permissions: string;
+  identities?: string;
 };
