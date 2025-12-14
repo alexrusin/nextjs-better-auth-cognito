@@ -29,13 +29,12 @@ export default function Navigation() {
   const handleLogout = async () => {
     setIsDropdownOpen(false);
     try {
-      await signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push("/");
-          },
-        },
-      });
+      const response = await fetch(`/api/auth-logout`, { method: "POST" });
+
+      const data = await response.json();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      }
     } catch (error) {
       console.error("Logout failed:", error);
     }
