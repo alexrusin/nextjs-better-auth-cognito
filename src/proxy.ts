@@ -1,4 +1,6 @@
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "./lib/auth";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -11,21 +13,23 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith(route),
   );
 
-  if (isProtectedRoute) {
-    // Try to get session from auth API
-    const session = request.cookies.get("better-auth.session_token");
+  const headersList = await headers();
+  const session = await auth.api.getSession({
+    headers: headersList,
+  });
 
+  const user = session?.user || null;
+
+  if (isProtectedRoute) {
     // If no session exists, redirect to home page
-    if (!session) {
+    if (!user) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
   // If user is logged in and trying to access home page, redirect to dashboard
   if (pathname === "/") {
-    const session = request.cookies.get("better-auth.session_token");
-
-    if (session) {
+    if (user) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
