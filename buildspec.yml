@@ -11,7 +11,7 @@ phases:
       # - echo $DOCKER_TOKEN | docker login --username $DOCKER_USER --password-stdin
       - IMAGE_NAME=nextjs-better-auth-cognito-dev
       - REPOSITORY_URI=412806877814.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
-      - IMAGE_TAG=$(git rev-parse HEAD)
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
   build:
     commands:
       - echo Build started on `date`
