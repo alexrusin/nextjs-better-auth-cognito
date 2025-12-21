@@ -3,6 +3,9 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR
+      - echo aws region $AWS_REGION
+      - echo aws account id $AWS_ACCOUNT_ID
+      - echo next public url $NEXT_PUBLIC_APP_URL
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 412806877814.dkr.ecr.$AWS_REGION.amazonaws.com
       # - echo Logging in to Docker...
       # - echo $DOCKER_TOKEN | docker login --username $DOCKER_USER --password-stdin
@@ -10,10 +13,11 @@ phases:
       - REPOSITORY_URI=412806877814.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
       - IMAGE_TAG=$(git rev-parse HEAD)
   build:
-    - echo Build started on `date`
-    - echo Building the Docker image...
-    - docker build --build-arg NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL -t $IMAGE_NAME .
-    - docker tag $IMAGE_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build --build-arg NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL -t $IMAGE_NAME .
+      - docker tag $IMAGE_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
