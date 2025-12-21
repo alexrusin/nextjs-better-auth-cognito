@@ -3,15 +3,12 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR
-      - echo aws region $AWS_REGION
-      - echo aws account id $AWS_ACCOUNT_ID
-      - echo next public url $NEXT_PUBLIC_APP_URL
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 412806877814.dkr.ecr.$AWS_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       # - echo Logging in to Docker...
       # - echo $DOCKER_TOKEN | docker login --username $DOCKER_USER --password-stdin
       - IMAGE_NAME=nextjs-better-auth-cognito-dev
-      - REPOSITORY_URI=412806877814.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
-      - IMAGE_TAG=$(git rev-parse HEAD)
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
   build:
     commands:
       - echo Build started on `date`
