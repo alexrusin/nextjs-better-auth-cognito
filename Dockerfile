@@ -46,9 +46,6 @@ COPY --from=builder /app/public ./public
 
 USER nextjs
 
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
-ENV HOSTNAME="0.0.0.0"
-CMD ["node", "server.js"]
+# Use dumb-init to run the Next.js application
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["npm", "start"]
