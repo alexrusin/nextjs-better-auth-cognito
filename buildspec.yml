@@ -1,5 +1,11 @@
 version: 0.2
 phases:
+  install:
+    runtime-versions:
+      nodejs: 24
+    commands:
+      - node --version
+      - npm --version
   pre_build:
     commands:
       - echo Logging in to Amazon ECR
@@ -13,7 +19,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build --build-arg NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL -t $IMAGE_NAME .
+      - docker build --build-arg NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL --build-arg MONGODB_URI=$MONGODB_URI -t $IMAGE_NAME .
       - docker tag $IMAGE_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
