@@ -3,18 +3,20 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - echo AWS REGION=$AWS_REGION
+      - echo AWS ACCOUNT ID=$AWS_ACCOUNT_ID
+      - echo NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 412806877814.dkr.ecr.$AWS_REGION.amazonaws.com
       # - echo Logging in to Docker...
       # - echo $DOCKER_TOKEN | docker login --username $DOCKER_USER --password-stdin
       - IMAGE_NAME=nextjs-better-auth-cognito-dev
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
+      - REPOSITORY_URI=412806877814.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
       - IMAGE_TAG=$(git rev-parse HEAD)
   build:
-    commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build --build-arg NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL -t $IMAGE_NAME .
-      - docker tag $IMAGE_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
+    - echo Build started on `date`
+    - echo Building the Docker image...
+    - docker build --build-arg NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL -t $IMAGE_NAME .
+    - docker tag $IMAGE_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
