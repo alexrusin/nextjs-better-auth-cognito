@@ -1,23 +1,20 @@
 #!/bin/bash
 set -e
 
-pwd
+cd /home/ubuntu/nextjs_better_auth_cognito
+
+# Source the variables created during build
+if [ -f deploy.env ]; then
+    source deploy.env
+fi
 
 echo "Stopping existing containers..."
-docker compose --env-file .env.production down || true
+docker compose --env-file .env.production down
 
 echo "Deploying image: $REPOSITORY_URI:$IMAGE_TAG"
 
-echo "Loading image metadata..."
-source image.env
-
 echo "Logging into ECR..."
-aws ecr get-login-password --region $AWS_REGION \
-  | docker login --username AWS \
-  --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-
-echo "Pulling image: $REPOSITORY_URI:$IMAGE_TAG"
-docker pull $REPOSITORY_URI:$IMAGE_TAG
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
 
 echo "Updating docker-compose env..."
 if [ ! -f .env.production ]; then
