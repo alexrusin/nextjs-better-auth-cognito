@@ -29,6 +29,7 @@ phases:
       - echo "REPOSITORY_URI=$REPOSITORY_URI" > deploy.env
       - echo "IMAGE_TAG=$IMAGE_TAG" >> deploy.env
       - echo "IMAGE_NAME=$IMAGE_NAME" >> deploy.env
+      - echo "AWS_REGION=$AWS_REGION" >> deploy.env
 artifacts:
   files:
     - "**/*"
