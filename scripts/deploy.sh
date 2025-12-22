@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd /home/ubuntu/nextjs_better_auth_cognito
+pwd
 
 echo "Stopping existing containers..."
 docker compose --env-file .env.production down || true
