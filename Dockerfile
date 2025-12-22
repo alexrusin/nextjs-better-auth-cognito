@@ -1,6 +1,4 @@
-# ------------------------------
 # Build stage
-# ------------------------------
 FROM node:24-alpine AS builder
 
 # Build-time arguments
@@ -21,12 +19,9 @@ RUN npm ci
 # Copy source files
 COPY . .
 
-# Build Next.js app in standalone mode
 RUN npm run build
 
-# ------------------------------
 # Production stage
-# ------------------------------
 FROM node:24-alpine AS runner
 
 WORKDIR /app
