@@ -14,8 +14,8 @@ docker compose --env-file .env.production down
 echo "Deploying image: $REPOSITORY_URI:$IMAGE_TAG"
 
 echo "Logging into ECR..."
-# aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 412806877814.dkr.ecr.us-west-2.amazonaws.com
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+# aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 412806877814.dkr.ecr.us-west-2.amazonaws.com
 
 echo "Updating docker-compose env..."
 if [ ! -f .env.production ]; then
@@ -27,5 +27,7 @@ echo "IMAGE_URI=$REPOSITORY_URI:$IMAGE_TAG" >> .env.production
 
 echo "Starting containers..."
 docker compose --env-file .env.production up -d
+
+docker image prune -a -f
 
 echo "Deployment completed successfully 🚀"
