@@ -7,7 +7,7 @@ export default function Home() {
         <div className="flex flex-col items-center gap-8 text-center">
           <div>
             <h1 className="text-5xl font-bold tracking-tight text-black dark:text-white mb-4">
-              Task Manager App
+              Task Manager
             </h1>
             <p className="text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl">
               Organize your tasks efficiently and boost your productivity with

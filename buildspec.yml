@@ -32,4 +32,4 @@ phases:
       - echo "AWS_REGION=$AWS_REGION" >> deploy.env
 artifacts:
   files:
-    - "**/*"
+    - deploy.env
